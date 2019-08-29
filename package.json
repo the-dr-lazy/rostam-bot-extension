@@ -1,0 +1,13 @@
+{
+  "name": "rostam-bot-extension",
+  "version": "0.0.0",
+  "description": "An extension that notify you suspicious accounts on Twitter in Chrome and Firefox.",
+  "repository": "https://github.com/thebrodmann/rostam-bot-extension",
+  "author": {
+    "name": "Mohammad Hasani",
+    "email": "thebrodmann@gmail.com",
+    "url": "https://github.com/thebrodmann"
+  },
+  "license": "GPLv3",
+  "private": true
+}
