@@ -11,7 +11,8 @@
   "license": "GPLv3",
   "private": true,
   "scripts": {
-    "start": "webpack -w"
+    "start": "webpack -w",
+    "build": "webpack"
   },
   "dependencies": {
     "rambda": "^3.0.1",
