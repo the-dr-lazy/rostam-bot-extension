@@ -1,0 +1,14 @@
+{
+  "include": ["src/**/*"],
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": ["dom", "esnext", "scripthost"],
+    "strict": true,
+    "importHelpers": true,
+    "noEmitHelpers": true,
+    "declaration": false
+  }
+}
