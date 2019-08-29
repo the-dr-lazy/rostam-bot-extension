@@ -13,6 +13,7 @@ function root(...args) {
 
 const paths = {
   src: root('src'),
+  assets: root('assets'),
   build: root('build'),
   cache: root('node_modules/.cache'),
   get manifest() {
@@ -61,20 +62,24 @@ module.exports = {
     new CleanPlugin({
       cleanOnceBeforeBuildPatterns: [paths.build],
     }),
-    new CopyPlugin([
-      {
-        from: path.join(paths.src, 'manifest.json'),
-        transform(content) {
-          const manifest = {
-            ...JSON.parse(content.toString()),
-            description: pkg.description,
-            version: pkg.version,
-          }
+    new CopyPlugin(
+      [
+        {
+          from: path.join(paths.src, 'manifest.json'),
+          transform(content) {
+            const manifest = {
+              ...JSON.parse(content.toString()),
+              description: pkg.description,
+              version: pkg.version,
+            }
 
-          return Buffer.from(JSON.stringify(manifest, null, 2))
+            return Buffer.from(JSON.stringify(manifest, null, 2))
+          },
         },
-      },
-    ]),
+        { from: paths.assets, to: path.join(paths.build, 'assets') },
+      ],
+      { copyUnmodified: true }
+    ),
     new CheckerPlugin(),
     new MiniCSSExtractPlugin({
       filename: '[name].css',
