@@ -3,7 +3,7 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
-const DotenvPlugin = require('webpack-dotenv-plugin')
+const DotenvPlugin = require('dotenv-webpack')
 
 const pkg = require('./package.json')
 
@@ -85,8 +85,9 @@ module.exports = {
       filename: '[name].css',
     }),
     new DotenvPlugin({
-      sample: root('.env.example'),
       path: root('.env'),
+      defaults: root('.env.defaults'),
+      safe: root('.env.example'),
     }),
   ],
 }
