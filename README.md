@@ -96,4 +96,4 @@ Please respect our [Code of Conduct](CODE_OF_CONDUCT.md), in short:
 
 ## License
 
-Rostam bot browser extension is released under [MIT license](LICENSE).
+Rostam bot browser extension is released under [GPL-3.0.0 license](LICENSE).
