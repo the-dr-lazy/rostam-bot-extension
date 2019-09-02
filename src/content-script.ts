@@ -18,6 +18,7 @@ import {
 } from 'rxjs/operators'
 import { always } from 'rambda'
 
+import * as Rostam from './api'
 import {
   getCommonAncestorFromNodes,
   notNil,
@@ -28,7 +29,6 @@ import {
   getAllTweetNodes,
   getTweetNode,
   makeAvatarSuspicous,
-  Rostam,
 } from './utils'
 
 import './content-script.scss'
@@ -116,12 +116,18 @@ function main() {
   )
 
   const notSupportedRoutes = {
-    matches: [/^\/(explore|notifications|messages|settings|logout|i)(\/.*)?$/i],
+    matches: [/^\/(explore|messages|settings|logout|i)(\/.*)?$/i],
     switchMap: always(EMPTY),
   }
 
   const suspiciousAvatarNodeRoute$ = route(location$, [
     notSupportedRoutes,
+    {
+      matches: [/^\/notifications\/?$/i],
+      switchMap() {
+        return merge(suspiciousAvatarNode$)
+      },
+    },
     {
       matches: [/^\/(home|search|hashtag|[A-z0-9_]{1,15})\/?/i],
       switchMap: always(suspiciousAvatarNode$),
