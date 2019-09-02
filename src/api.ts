@@ -6,11 +6,7 @@ export const rostamBotAPIBaseURL = process.env.ROSTAM_BOT_API_BASE_URL!
 
 export const endpoints = {
   isUserBlocked(username: string) {
-    return joinPath(
-      rostamBotAPIBaseURL,
-      'SuspiciousActivity/IsTwitterUserBlocked',
-      username
-    )
+    return joinPath(rostamBotAPIBaseURL, 'twitter/check', username)
   },
 }
 
