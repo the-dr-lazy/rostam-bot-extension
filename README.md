@@ -72,7 +72,7 @@ The command should exit with zero exit code and in the root of project the `dist
 
 [![Temporary installation in Firefox](http://img.youtube.com/vi/cer9EUKegG4/0.jpg)](http://www.youtube.com/watch?v=cer9EUKegG4)
 
-Ta-da! The extension has been installed. Now you can go to twitter and be integrated with [Rostam Bot](rostambot.com).
+Ta-da! The extension has been installed. Now you can go to twitter and be integrated with [Rostam Bot](https://rostambot.com).
 
 ## Features
 
