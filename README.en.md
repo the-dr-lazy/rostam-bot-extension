@@ -4,13 +4,13 @@
 
 <p align="center">
   <a href="LICENSE">
-    <img alt="License" src="https://img.shields.io/npm/l/deox.svg?logo=License&style=flat-square">
+    <img alt="License" src="https://img.shields.io/github/license/thebrodmann/rostam-bot-extension?style=for-the-badge">
   </a>
   <a href="https://github.com/semantic-release/semantic-release">
-    <img alt="Semantic Release" src="https://img.shields.io/badge/%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square">
+    <img alt="Semantic Release" src="https://img.shields.io/badge/%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=for-the-badge">
   </a>
   <a href="CONTRIBUTING.md">
-    <img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-green.svg?style=flat-square">
+    <img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-green.svg?style=for-the-badge">
   </a>
 </p>
 
