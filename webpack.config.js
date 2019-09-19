@@ -184,7 +184,7 @@ function createChromeConfig(base) {
       new CleanPlugin({
         cleanOnceBeforeBuildPatterns: [paths.dist.chrome],
       }),
-      copyAssets(paths.build.chrome),
+      copyAssets(paths.dist.chrome),
     ],
   }
 
