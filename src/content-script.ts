@@ -1,12 +1,4 @@
-import {
-  Observable,
-  merge,
-  from,
-  interval,
-  EMPTY,
-  throwError,
-  Observer,
-} from 'rxjs'
+import { merge, interval, EMPTY, throwError } from 'rxjs'
 import {
   flatMap,
   map,
@@ -20,73 +12,18 @@ import { always } from 'rambda'
 
 import * as Rostam from './api'
 import {
-  getCommonAncestorFromNodes,
-  notNil,
   getUsernameFromPathname,
   route,
   isTrue,
   clone,
-  getAllTweetNodes,
-  getTweetNode,
   makeAvatarSuspicous,
 } from './utils'
 
+import * as UI from './ui'
+
 import './content-script.scss'
 
-function getNewAddedTweetNodes(targetNode: Node) {
-  return new Observable<Element>(observer => {
-    const mutationObserver = new MutationObserver(mutationList =>
-      mutationList
-        .flatMap(mutationRecord =>
-          Array.from(<NodeListOf<Element>>mutationRecord.addedNodes)
-        )
-        .map(getTweetNode)
-        .filter(notNil)
-        .forEach(tweetNode => observer.next(tweetNode))
-    )
-
-    mutationObserver.observe(targetNode, { childList: true })
-
-    return () => mutationObserver.disconnect()
-  })
-}
-
-function emitTweetNodes(observer: Observer<Element[]>) {
-  const tweetNodes = getAllTweetNodes()
-
-  if (tweetNodes.length >= 2) {
-    observer.next(tweetNodes)
-    observer.complete()
-    return
-  }
-}
-
-const initialTweetNodes$ = new Observable<Element[]>(observer => {
-  emitTweetNodes(observer)
-
-  if (observer.closed) {
-    return
-  }
-
-  const mutationObserver = new MutationObserver(
-    () => observer.closed || emitTweetNodes(observer)
-  )
-
-  mutationObserver.observe(document, { childList: true, subtree: true })
-
-  return () => mutationObserver.disconnect()
-})
-
-const tweetNode$ = initialTweetNodes$.pipe(
-  flatMap(tweetNodes =>
-    merge(
-      from(tweetNodes),
-      getNewAddedTweetNodes(getCommonAncestorFromNodes(tweetNodes))
-    )
-  )
-)
-
-const suspiciousAvatarNode$ = tweetNode$.pipe(
+const suspiciousAvatarNode$ = UI.twitter.tweet$.pipe(
   flatMap(tweetNode => {
     const avatarNode = tweetNode.querySelector('a')
 

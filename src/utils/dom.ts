@@ -1,10 +1,6 @@
 import { head, last } from 'rambda'
 import { getIconURL, Icon } from '.'
 
-const selectors = {
-  tweet: '[data-testid="tweet"]',
-}
-
 const classes = {
   suspicious: 'o-suspicious',
   suspiciousIcon: 'o-suspicious__icon',
@@ -20,14 +16,6 @@ export function getCommonAncestorFromNodes(nodes: Node[]) {
   range.setEnd(last(nodes)!, 0)
 
   return range.commonAncestorContainer
-}
-
-export function getAllTweetNodes(parentNode: ParentNode = document) {
-  return Array.from(parentNode.querySelectorAll(selectors.tweet))
-}
-
-export function getTweetNode(parentNode: ParentNode) {
-  return parentNode.querySelector(selectors.tweet)
 }
 
 export function createSuspiciousIconElement() {
