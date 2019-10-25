@@ -11,6 +11,8 @@ const pkg = require('./package.json')
 
 // Utils
 
+let __DEV__
+
 function root(...args) {
   return path.resolve(__dirname, ...args)
 }
@@ -92,6 +94,8 @@ function createConfig({ production } = defaultEnv) {
   const chrome = createChromeConfig(base)
   const firefox = createFirefoxConfig(base)
 
+  __DEV__ = !production
+
   return production
     ? [chrome.production, firefox.production]
     : [chrome.development, firefox.development]
@@ -102,6 +106,9 @@ function manifestTransform(content) {
     ...JSON.parse(content.toString()),
     description: pkg.description,
     version: pkg.version,
+    content_security_policy: __DEV__
+      ? "script-src 'self' 'unsafe-eval'; object-src 'self'"
+      : "script-src 'self'; object-src 'self'",
   }
 
   return Buffer.from(JSON.stringify(manifest, null, 2))
