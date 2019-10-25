@@ -16,19 +16,23 @@ function root(...args) {
 }
 
 function copyAssets(destination) {
-  return new CopyPlugin([
-    { from: paths.assets, to: path.join(destination, 'assets') },
-  ])
+  return new CopyPlugin(
+    [{ from: paths.assets, to: path.join(destination, 'assets') }],
+    { copyUnmodified: true }
+  )
 }
 
 function copyManifest(manifest) {
-  return new CopyPlugin([
-    {
-      from: manifest,
-      to: 'manifest.json',
-      transform: manifestTransform,
-    },
-  ])
+  return new CopyPlugin(
+    [
+      {
+        from: manifest,
+        to: 'manifest.json',
+        transform: manifestTransform,
+      },
+    ],
+    { copyUnmodified: true }
+  )
 }
 
 // Reusable stuffs
@@ -108,6 +112,7 @@ function createBaseConfig() {
     context: paths.src,
     entry: {
       'content-script': './content-script.ts',
+      'background-script': './background-script.ts',
     },
     output: {
       filename: '[name].js',
