@@ -11,6 +11,10 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "noEmitHelpers": true,
-    "declaration": false
+    "declaration": false,
+    "baseUrl": "src",
+    "paths": {
+      "~/*": ["./*"]
+    }
   }
 }

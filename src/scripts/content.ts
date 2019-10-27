@@ -1,18 +1,18 @@
 import { merge, throwError, Subscription } from 'rxjs'
 import { flatMap, filter, mapTo, tap, switchMapTo } from 'rxjs/operators'
 
-import { createRouter } from './router'
+import { createRouter } from '~/router'
 import {
   getUsernameFromPathname,
   isTrue,
   makeAvatarSuspicous,
   ofName,
-} from './utils'
-import * as Rostam from './api'
-import * as Bus from './bus'
-import * as UI from './ui'
+} from '~/utils'
+import * as Rostam from '~/api'
+import * as Bus from '~/bus'
+import * as UI from '~/ui'
 
-import './content-script.scss'
+import '~/scss/content.scss'
 
 const suspiciousAvatarNode$ = UI.twitter.tweet$.pipe(
   flatMap(tweetNode => {

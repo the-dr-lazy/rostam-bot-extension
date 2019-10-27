@@ -4,7 +4,10 @@ const mergeDeep = require('merge-deep')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
-const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin
+const {
+  CheckerPlugin,
+  TsConfigPathsPlugin,
+} = require('awesome-typescript-loader')
 const DotenvPlugin = require('dotenv-webpack')
 
 const pkg = require('./package.json')
@@ -41,51 +44,43 @@ function copyManifest(manifest) {
 
 const defaultEnv = { production: false }
 
-const paths = {
+const paths = Object.freeze({
   src: root('src'),
-  assets: root('assets'),
-  build: {
-    toString() {
-      return root('build')
-    },
-    get chrome() {
-      return path.join(this.toString(), 'chrome')
-    },
-    get firefox() {
-      return path.join(this.toString(), 'firefox')
-    },
+  get scripts() {
+    return path.join(paths.src, 'scripts')
   },
-  dist: {
-    toString() {
-      return root('dist')
-    },
-    get chrome() {
-      return path.join(this.toString(), 'chrome')
-    },
-    get firefox() {
-      return path.join(this.toString(), 'firefox')
-    },
+  get contentScript() {
+    return path.join(paths.scripts, 'content.ts')
+  },
+  get backgroundScript() {
+    return path.join(paths.scripts, 'background.ts')
+  },
+  get manifests() {
+    return path.join(paths.src, 'manifests')
+  },
+  get chromeManifest() {
+    return path.join(paths.manifests, 'manifest.chrome.json')
+  },
+  get firefoxManifest() {
+    return path.join(paths.manifests, 'manifest.firefox.json')
+  },
+  assets: root('assets'),
+  build: root('build'),
+  get buildChrome() {
+    return path.join(paths.build, 'chrome')
+  },
+  get buildFirefox() {
+    return path.join(paths.build, 'firefox')
+  },
+  dist: root('dist'),
+  get distChrome() {
+    return path.join(paths.dist, 'chrome')
+  },
+  get distFirefox() {
+    return path.join(paths.dist, 'firefox')
   },
   cache: root('node_modules/.cache'),
-  get manifests() {
-    const paths = this
-
-    return {
-      toString() {
-        return path.join(paths.src, 'manifests')
-      },
-      get chrome() {
-        return path.join(this.toString(), 'manifest.chrome.json')
-      },
-      get firefox() {
-        return path.join(this.toString(), 'manifest.firefox.json')
-      },
-    }
-  },
-  get manifest() {
-    return path.join(this.src, 'manifest.json')
-  },
-}
+})
 
 // Configuration
 
@@ -118,14 +113,15 @@ function createBaseConfig() {
   const common = {
     context: paths.src,
     entry: {
-      'content-script': './content-script.ts',
-      'background-script': './background-script.ts',
+      'content-script': paths.contentScript,
+      'background-script': paths.backgroundScript,
     },
     output: {
       filename: '[name].js',
     },
     resolve: {
       extensions: ['.ts', '.js'],
+      plugins: [new TsConfigPathsPlugin()],
     },
     module: {
       rules: [
@@ -175,28 +171,28 @@ function createBaseConfig() {
 function createChromeConfig(base) {
   const common = {
     name: 'chrome',
-    plugins: [copyManifest(paths.manifests.chrome)],
+    plugins: [copyManifest(paths.chromeManifest)],
   }
   const development = {
     output: {
-      path: paths.build.chrome,
+      path: paths.buildChrome,
     },
     plugins: [
       new CleanPlugin({
-        cleanOnceBeforeBuildPatterns: [paths.build.chrome],
+        cleanOnceBeforeBuildPatterns: [paths.buildChrome],
       }),
-      copyAssets(paths.build.chrome),
+      copyAssets(paths.buildChrome),
     ],
   }
   const production = {
     output: {
-      path: paths.dist.chrome,
+      path: paths.distChrome,
     },
     plugins: [
       new CleanPlugin({
-        cleanOnceBeforeBuildPatterns: [paths.dist.chrome],
+        cleanOnceBeforeBuildPatterns: [paths.distChrome],
       }),
-      copyAssets(paths.dist.chrome),
+      copyAssets(paths.distChrome),
     ],
   }
 
@@ -209,28 +205,28 @@ function createChromeConfig(base) {
 function createFirefoxConfig(base) {
   const common = {
     name: 'firefox',
-    plugins: [copyManifest(paths.manifests.firefox)],
+    plugins: [copyManifest(paths.firefoxManifest)],
   }
   const development = {
     output: {
-      path: paths.build.firefox,
+      path: paths.buildFirefox,
     },
     plugins: [
       new CleanPlugin({
-        cleanOnceBeforeBuildPatterns: [paths.build.firefox],
+        cleanOnceBeforeBuildPatterns: [paths.buildFirefox],
       }),
-      copyAssets(paths.build.firefox),
+      copyAssets(paths.buildFirefox),
     ],
   }
   const production = {
     output: {
-      path: paths.dist.firefox,
+      path: paths.distFirefox,
     },
     plugins: [
       new CleanPlugin({
-        cleanOnceBeforeBuildPatterns: [paths.dist.firefox],
+        cleanOnceBeforeBuildPatterns: [paths.distFirefox],
       }),
-      copyAssets(paths.dist.firefox),
+      copyAssets(paths.distFirefox),
     ],
   }
 
