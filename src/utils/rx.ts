@@ -1,29 +1,25 @@
-import { Observable, EMPTY, interval, BehaviorSubject } from 'rxjs'
-import { switchMap } from 'rxjs/operators'
+import { filter } from 'rxjs/operators'
+import * as R from 'ramda'
 
-type RouteConfig<TValue> = {
-  matches: RegExp[]
-  switchMap(location: Location): Observable<TValue>
+import { castArray } from './data'
+import * as Bus from '../bus'
+
+export function ofType<TType extends string>({ type }: { type: TType }) {
+  const predict = R.compose<Bus.Message<TType, any>, TType, boolean>(
+    R.equals(type),
+    R.prop('type')
+  )
+
+  return filter(predict)
 }
 
-type InferReturningObservable<TRouteConfig> = TRouteConfig extends RouteConfig<
-  infer V
->
-  ? Observable<V>
-  : never
-export function route<TRouteConfig extends RouteConfig<any>>(
-  location$: Observable<Location>,
-  configs: TRouteConfig[]
-) {
-  return <InferReturningObservable<TRouteConfig>>location$.pipe(
-    switchMap(({ pathname }) => {
-      const route = configs.find(({ matches }) =>
-        matches.some(match => {
-          return match.test(pathname)
-        })
-      )
+export function ofName(castableName: any | any[]) {
+  const names = castArray(castableName)
 
-      return route ? route.switchMap(location) : EMPTY
-    })
+  const predict = R.compose<any, any, any>(
+    R.contains(R.__, names),
+    R.prop('name')
   )
+
+  return filter(predict)
 }

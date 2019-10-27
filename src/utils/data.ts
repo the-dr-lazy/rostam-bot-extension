@@ -1,10 +1,10 @@
-import { isNil } from 'rambda'
+import * as R from 'ramda'
 import { identity } from 'rxjs'
 
 export function notNil<TValue>(
   value: TValue | undefined | null
 ): value is TValue {
-  return !isNil(value)
+  return !R.isNil(value)
 }
 
 export const isTrue = <(value: Boolean) => value is true>identity
@@ -17,6 +17,6 @@ export function joinPath(...paths: string[]) {
   return paths.map(path => path.trim().replace(/^\/+|\/+$/g, '')).join('/')
 }
 
-export function clone<TObject extends {}>(object: TObject): TObject {
-  return { ...object }
+export function castArray<TValue>(value: TValue | TValue[]): TValue[] {
+  return [].concat(<any>value)
 }

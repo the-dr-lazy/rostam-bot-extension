@@ -3,7 +3,7 @@
   "name": "Rostam Bot",
   "description": "PLACE_HOLDER",
   "version": "PLACE_HOLDER",
-  "permissions": ["https://*/*", "http://*/*"],
+  "permissions": ["https://*/*", "http://*/*", "webNavigation"],
   "content_scripts": [
     {
       "matches": ["http://twitter.com/*", "https://twitter.com/*"],
@@ -13,5 +13,9 @@
       "all_frames": true
     }
   ],
+  "background": {
+    "scripts": ["background-script.js"],
+    "persistent": false
+  },
   "web_accessible_resources": ["assets/**/*"]
 }

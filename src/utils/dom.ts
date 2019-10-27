@@ -1,5 +1,6 @@
-import { head, last } from 'rambda'
-import { getIconURL, Icon } from '.'
+import * as R from 'ramda'
+
+import { getIconURL, Icon } from './chrome'
 
 const classes = {
   suspicious: 'o-suspicious',
@@ -12,8 +13,8 @@ export function getCommonAncestorFromNodes(nodes: Node[]) {
   }
 
   const range = document.createRange()
-  range.setStart(head(nodes)!, 0)
-  range.setEnd(last(nodes)!, 0)
+  range.setStart(R.head(nodes)!, 0)
+  range.setEnd(R.last(nodes)!, 0)
 
   return range.commonAncestorContainer
 }

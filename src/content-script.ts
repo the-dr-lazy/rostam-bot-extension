@@ -1,24 +1,15 @@
-import { merge, interval, EMPTY, throwError } from 'rxjs'
-import {
-  flatMap,
-  map,
-  filter,
-  mapTo,
-  publishBehavior,
-  distinctUntilKeyChanged,
-  refCount,
-} from 'rxjs/operators'
-import { always } from 'rambda'
+import { merge, throwError, Subscription } from 'rxjs'
+import { flatMap, filter, mapTo, tap, switchMapTo } from 'rxjs/operators'
 
-import * as Rostam from './api'
+import { createRouter } from './router'
 import {
   getUsernameFromPathname,
-  route,
   isTrue,
-  clone,
   makeAvatarSuspicous,
+  ofName,
 } from './utils'
-
+import * as Rostam from './api'
+import * as Bus from './bus'
 import * as UI from './ui'
 
 import './content-script.scss'
@@ -42,36 +33,57 @@ const suspiciousAvatarNode$ = UI.twitter.tweet$.pipe(
   })
 )
 
-function main() {
-  const tick$ = interval(100)
+const enum Route {
+  Home,
+  Explore,
+  Search,
+  Hashtag,
+  Notifications,
+  Messages,
+  Tweet,
+  Profile,
+}
 
-  const location$ = tick$.pipe(
-    map(() => clone(window.location)),
-    publishBehavior(clone(window.location)),
-    refCount(),
-    distinctUntilKeyChanged('pathname')
+function main() {
+  const message$ = Bus.createMessageSubject()
+  const path$ = Bus.createPathSubject(message$)
+  const route$ = createRouter(
+    [
+      { name: Route.Home, path: /^\/home\/?$/i },
+      { name: Route.Explore, path: /^\/explore\/?$/i },
+      { name: Route.Search, path: /^\/search\?/i },
+      { name: Route.Hashtag, path: /^\/hashtag\/?/i },
+      { name: Route.Notifications, path: /^\/notifications/i },
+      { name: Route.Messages, path: /^\/messages\/?/i },
+      { name: Route.Tweet, path: /^\/([A-z0-9_]{1,15})\/status\/\d+$/i },
+      {
+        name: Route.Profile,
+        path: /^\/([A-z0-9_]{1,15})\/?(?:with_replies|media|likes)?$/i,
+      },
+    ],
+    { path$ }
   )
 
-  const notSupportedRoutes = {
-    matches: [/^\/(explore|messages|settings|logout|i)(\/.*)?$/i],
-    switchMap: always(EMPTY),
-  }
+  const router$ = merge(
+    route$.pipe(
+      ofName([
+        Route.Home,
+        Route.Explore,
+        Route.Search,
+        Route.Hashtag,
+        Route.Notifications,
+        Route.Tweet,
+        Route.Profile,
+      ]),
+      switchMapTo(suspiciousAvatarNode$),
+      tap(makeAvatarSuspicous)
+    )
+  )
 
-  const suspiciousAvatarNodeRoute$ = route(location$, [
-    notSupportedRoutes,
-    {
-      matches: [/^\/notifications\/?$/i],
-      switchMap() {
-        return merge(suspiciousAvatarNode$)
-      },
-    },
-    {
-      matches: [/^\/(home|search|hashtag|[A-z0-9_]{1,15})\/?/i],
-      switchMap: always(suspiciousAvatarNode$),
-    },
-  ])
+  const subscription = new Subscription()
+  window.addEventListener('beforeunload', subscription.unsubscribe)
 
-  suspiciousAvatarNodeRoute$.subscribe({ next: makeAvatarSuspicous })
+  subscription.add(router$.subscribe())
 }
 
 main()

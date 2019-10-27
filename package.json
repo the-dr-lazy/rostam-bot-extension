@@ -19,13 +19,14 @@
     "build:firefox": "webpack --env.production --config-name firefox"
   },
   "dependencies": {
-    "rambda": "^3.0.1",
+    "ramda": "^0.26.1",
     "rxjs": "^6.5.2",
     "webextension-polyfill": "^0.4.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.88",
     "@types/firefox-webext-browser": "^67.0.2",
+    "@types/ramda": "types/npm-ramda#dist",
     "autoprefixer": "^9.6.1",
     "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^3.0.0",
