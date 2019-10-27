@@ -17,5 +17,11 @@
     "scripts": ["background-script.js"],
     "persistent": false
   },
-  "web_accessible_resources": ["assets/**/*"]
+  "web_accessible_resources": ["assets/**/*"],
+  "icons": {
+    "16": "assets/favicons/favicon16.png",
+    "32": "assets/favicons/favicon32.png",
+    "48": "assets/favicons/favicon48.png",
+    "128": "assets/favicons/favicon128.png"
+  }
 }
