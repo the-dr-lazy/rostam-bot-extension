@@ -79,7 +79,10 @@ const paths = Object.freeze({
   get distFirefox() {
     return path.join(paths.dist, 'firefox')
   },
-  cache: root('node_modules/.cache'),
+  nodeModules: root('node_modules'),
+  get cache() {
+    return path.join(paths.nodeModules, '.cache')
+  },
 })
 
 // Configuration
@@ -141,7 +144,12 @@ function createBaseConfig() {
             { loader: MiniCSSExtractPlugin.loader },
             'css-loader',
             'postcss-loader',
-            'sass-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                includePaths: [path.join(paths.src, 'scss'), paths.nodeModules],
+              },
+            },
           ],
         },
       ],
