@@ -1,0 +1,28 @@
+@use "sass:map";
+
+/// Color palette map
+///
+/// @group Colour
+/// @author Mohammad Hasani
+///
+/// @prop {Color} white - Used for the heading, the link, the button background color, etc.
+/// @prop {Color} warning  - N/A
+$_colours: (
+  white: #fff,
+  warning: #fdd32a,
+);
+
+/// Color palette helper function as a specific wrap arround map-get for $_colours map
+///
+/// @group Color
+/// @author Mohammad Hasani
+///
+/// @parameter {String} $key - A key of $_colors map
+/// @return {Color} Specified color based on $_colors map
+@function get($key) {
+  @if map.has-key($_colours, $key) {
+    @return map.get($_colours, $key);
+  }
+
+  @error "Unknown key '#{$key}' in $_colours map.";
+}

@@ -1,43 +1,70 @@
-$color-danger: #f21d1d;
+@use 'colour';
+
+%overlay {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
 
 .o-suspicious {
-  position: relative;
-  box-shadow: 0 0 0 0 rgba($color-danger, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 50%;
+  overflow: hidden;
+
   animation-name: pulse;
   animation-duration: 1s;
   animation-timing-function: ease;
   animation-iteration-count: infinite;
 
-  &::before {
-    content: '';
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    background-color: $color-danger;
-    mix-blend-mode: multiply;
+  pointer-events: none;
+
+  &__overlay {
+    &::before {
+      @extend %overlay;
+
+      background-color: colour.get(white);
+      mix-blend-mode: overlay;
+    }
+
+    &::after {
+      @extend %overlay;
+
+      background-color: colour.get(warning);
+      mix-blend-mode: multiply;
+    }
   }
 
   &__icon {
     position: absolute;
+    z-index: 2;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+
     width: 55%;
     height: 55%;
-    transform: translate(-50%, -50%);
   }
 }
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba($color-danger, 0.7);
+    box-shadow: 0 0 0 0 rgba(colour.get(warning), 1);
   }
 
   70% {
-    box-shadow: 0 0 0 10px rgba($color-danger, 0);
+    box-shadow: 0 0 0 10px rgba(colour.get(warning), 0);
   }
 
   100% {
-    box-shadow: 0 0 0 0 rgba($color-danger, 0);
+    box-shadow: 0 0 0 0 rgba(colour.get(warning), 0);
   }
 }

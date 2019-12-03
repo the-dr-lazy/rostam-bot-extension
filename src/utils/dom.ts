@@ -3,8 +3,13 @@ import * as R from 'ramda'
 import { getIconURL, Icon } from './chrome'
 
 const classes = {
-  suspicious: 'o-suspicious',
-  suspiciousIcon: 'o-suspicious__icon',
+  suspicious: {
+    block: 'o-suspicious',
+    elements: {
+      overlay: 'o-suspicious__overlay',
+      icon: 'o-suspicious__icon',
+    },
+  },
 }
 
 export function getCommonAncestorFromNodes(nodes: Node[]) {
@@ -19,13 +24,32 @@ export function getCommonAncestorFromNodes(nodes: Node[]) {
   return range.commonAncestorContainer
 }
 
+export function createSuspiciousOverlayElement() {
+  const div = document.createElement('div')
+
+  div.classList.add(classes.suspicious.elements.overlay)
+
+  return div
+}
+
 export function createSuspiciousIconElement() {
   const img = document.createElement('img')
 
   img.src = getIconURL(Icon.Poison)
-  img.classList.add(classes.suspiciousIcon)
+  img.classList.add(classes.suspicious.elements.icon)
 
   return img
+}
+
+export function createSuspiciousElement() {
+  const div = document.createElement('div')
+
+  div.classList.add(classes.suspicious.block)
+
+  div.appendChild(createSuspiciousOverlayElement())
+  div.appendChild(createSuspiciousIconElement())
+
+  return div
 }
 
 export function makeAvatarSuspicous(avatarNode: Element) {
@@ -37,6 +61,5 @@ export function makeAvatarSuspicous(avatarNode: Element) {
     )
   }
 
-  avatarNode.classList.add(classes.suspicious)
-  parentNode.appendChild(createSuspiciousIconElement())
+  parentNode.appendChild(createSuspiciousElement())
 }
