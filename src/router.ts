@@ -1,8 +1,9 @@
-import { of, EMPTY } from 'rxjs'
-import { switchMap } from 'rxjs/operators'
+import { of, EMPTY, OperatorFunction } from 'rxjs'
+import { switchMap, filter } from 'rxjs/operators'
 import * as R from 'ramda'
 
 import * as Bus from './bus'
+import { castArray } from './utils'
 
 type RouterSpec<TName> = {
   name: TName
@@ -25,12 +26,7 @@ export function createRouter<TName>(
 ) {
   return path$.pipe(
     switchMap(path => {
-      const route = routes.find(
-        R.compose(
-          R.test(R.__, path),
-          R.prop('path')
-        )
-      )
+      const route = routes.find(R.compose(R.test(R.__, path), R.prop('path')))
 
       if (!route) {
         return EMPTY
@@ -45,4 +41,16 @@ export function createRouter<TName>(
         : EMPTY
     })
   )
+}
+
+export type ExtractRoute<TRoute, TName> = Extract<TRoute, Route<TName>>
+
+export function ofName<
+  TSource extends Route<any>,
+  TName,
+  TSink extends TSource = ExtractRoute<TSource, TName>
+>(castableName: TName | TName[]): OperatorFunction<TSource, TSink> {
+  const names = castArray(castableName)
+
+  return filter((route: TSource): route is TSink => names.includes(route.name))
 }

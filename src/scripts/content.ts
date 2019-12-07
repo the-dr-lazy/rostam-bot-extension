@@ -1,13 +1,8 @@
 import { merge, throwError, Subscription } from 'rxjs'
 import { flatMap, filter, mapTo, tap, switchMapTo } from 'rxjs/operators'
 
-import { createRouter } from '~/router'
-import {
-  getUsernameFromPathname,
-  isTrue,
-  makeAvatarSuspicous,
-  ofName,
-} from '~/utils'
+import { getUsernameFromPathname, isTrue, makeAvatarSuspicous } from '~/utils'
+import * as Router from '~/router'
 import * as Rostam from '~/api'
 import * as Bus from '~/bus'
 import * as UI from '~/ui'
@@ -47,7 +42,7 @@ const enum Route {
 function main() {
   const message$ = Bus.createMessageSubject()
   const path$ = Bus.createPathSubject(message$)
-  const route$ = createRouter(
+  const route$ = Router.createRouter(
     [
       { name: Route.Home, path: /^\/home\/?$/i },
       { name: Route.Explore, path: /^\/explore\/?$/i },
@@ -66,7 +61,7 @@ function main() {
 
   const router$ = merge(
     route$.pipe(
-      ofName([
+      Router.ofName([
         Route.Home,
         Route.Explore,
         Route.Search,
