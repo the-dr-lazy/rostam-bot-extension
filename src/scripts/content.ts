@@ -78,6 +78,9 @@ function main() {
   const subscription = new Subscription()
   window.addEventListener('beforeunload', subscription.unsubscribe)
 
+  const containers = UI.twitter.createContainers()
+
+  subscription.add(UI.snackbar.subscribe(containers.snackbar))
   subscription.add(router$.subscribe())
 }
 

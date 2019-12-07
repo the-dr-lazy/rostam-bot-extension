@@ -1,5 +1,7 @@
 @use 'colour';
 
+@use "components";
+
 %overlay {
   content: '';
   position: absolute;

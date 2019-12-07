@@ -1,0 +1,78 @@
+.c-snackbar {
+  position: fixed;
+  bottom: 0;
+  // bottom: 32px;
+  left: 50%;
+  // transform: translate3d(-50%, 100%, 0) scale3d(0.8, 0.8, 0.8);
+  transform: translate3d(-50%, 0, 0) scale3d(0.95, 0.95, 0.95);
+
+  padding: 13px 21px;
+
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+
+  overflow: hidden;
+
+  border-radius: 13px;
+  background-color: #ffffff;
+  box-shadow: 0 16px 37px -13px rgba(#000, 0.2);
+
+  backface-visibility: hidden;
+
+  // transition: bottom 500ms 0s ease, transform 500ms 0s ease,
+  //   opacity 300ms 0s ease, filter 300ms 0s ease;
+  transition: opacity 500ms ease, filter 500ms ease, bottom 300ms ease 0s,
+    transform 300ms ease 0s;
+
+  opacity: 0;
+
+  filter: blur(55px);
+
+  &.-is-active {
+    bottom: 32px;
+    transform: translate3d(-50%, 0, 0) scale3d(1, 1, 1);
+    opacity: 1;
+
+    filter: blur(0);
+
+    // transition: bottom 500ms 0s ease, transform 500ms 0s ease,
+    transition: opacity 500ms ease, filter 500ms ease, bottom 300ms ease 100ms,
+      transform 300ms ease 100ms;
+  }
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+    fill: #f7cc1b;
+    margin-right: 13px;
+  }
+
+  &__title {
+    color: #6c7486;
+    margin: 0;
+    line-height: 1.618;
+  }
+
+  &__description {
+    color: #6c7486;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  &__action {
+    font-size: 1rem;
+    text-shadow: 0 0 10px #f3ca24;
+
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    padding: 0 21px;
+    margin: -13px -21px -13px 13px;
+
+    background-color: #fdd32a;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+}

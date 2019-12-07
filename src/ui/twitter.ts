@@ -66,3 +66,11 @@ export const tweet$ = initialTweets$.pipe(
     )
   )
 )
+
+export function createContainers() {
+  const snackbar = document.createElement('div')
+
+  document.body.append(snackbar)
+
+  return { snackbar }
+}
