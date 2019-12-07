@@ -1,17 +1,11 @@
 import { Subject, Observable } from 'rxjs'
-import * as R from 'ramda'
-import { ofType } from './utils'
 import { map, publishBehavior, refCount } from 'rxjs/operators'
-
-export type Message<TType extends string, TPayload = undefined> = {
-  type: TType
-  payload?: TPayload
-}
+import { createActionCreator, Action, ofType } from 'deox'
 
 export type MessageSubject = ReturnType<typeof createMessageSubject>
 
 export function createMessageSubject() {
-  const message$ = new Subject<Message<any, any>>()
+  const message$ = new Subject<Action<any, any, any>>()
 
   chrome.runtime.onMessage.addListener(message => {
     message$.next(message)
@@ -31,34 +25,10 @@ export function createPathSubject(message$: MessageSubject) {
   )
 }
 
-export function sendMessage(message: Message<any, any>) {
+export function sendMessage(message: Action<any, any, any>) {
   return new Observable(observer =>
     chrome.runtime.sendMessage(message, observer.complete)
   )
 }
 
-export function createMessage<TType extends string, TPayload = undefined>(
-  type: TType,
-  payload?: TPayload
-): Message<TType, TPayload> {
-  return {
-    type,
-    ...(payload === undefined ? {} : { payload }),
-  }
-}
-
-export function createMessageCreator<
-  TType extends string,
-  TArgs extends any[] = [],
-  TPayload = undefined
->(
-  type: TType,
-  createPayload: (...args: TArgs) => TPayload = <any>R.always(undefined)
-) {
-  return Object.assign(
-    (...args: TArgs) => createMessage(type, createPayload(...args)),
-    { type }
-  )
-}
-
-export const historyUpdated = createMessageCreator('HISTORY_UPDATED')
+export const historyUpdated = createActionCreator('HISTORY_UPDATED')
