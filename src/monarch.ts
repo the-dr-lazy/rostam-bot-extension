@@ -49,7 +49,6 @@ export function createComponent<TState, TAction extends AnyAction>({
   const initialState = reducer(undefined, <any>init())
 
   const action$ = new Subject<TAction>()
-  action$.pipe(tap(console.log)).subscribe()
 
   const state$ = action$.pipe(
     scan(reducer, initialState),
