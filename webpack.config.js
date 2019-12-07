@@ -152,6 +152,26 @@ function createBaseConfig() {
             },
           ],
         },
+        {
+          test: /\.svg$/i,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                outputPath: 'assets/icons',
+              },
+            },
+            {
+              loader: 'image-webpack-loader',
+              options: {
+                bypassOnDebug: true,
+                svgo: {
+                  plugins: [{ removeViewBox: false }],
+                },
+              },
+            },
+          ],
+        },
       ],
     },
 
