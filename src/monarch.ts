@@ -15,7 +15,7 @@ import {
   startWith,
   pairwise,
 } from 'rxjs/operators'
-import { createActionCreator, AnyAction } from 'deox'
+import { action as createAction, AnyAction } from 'deox'
 import { VNode } from 'snabbdom/vnode'
 import * as snabbdom from 'snabbdom'
 
@@ -33,7 +33,7 @@ export type Reducer<TState, TAction> = (
   action: TAction
 ) => TState
 
-const init = createActionCreator('INIT')
+const init = createAction('INIT')
 
 type CreateComponentSpec<TState, TAction extends AnyAction> = {
   render: (state: TState) => VNode
@@ -44,7 +44,7 @@ type CreateComponentSpec<TState, TAction extends AnyAction> = {
 export function createComponent<TState, TAction extends AnyAction>(
   spec: CreateComponentSpec<TState, TAction>
 ) {
-  const initialState = spec.reducer(undefined, <any>init())
+  const initialState = spec.reducer(undefined, <TAction>init)
 
   const action$ = new Subject<TAction>()
 
