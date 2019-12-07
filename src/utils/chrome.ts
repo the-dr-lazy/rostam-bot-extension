@@ -7,9 +7,10 @@ export function getAssetURL(...paths: string[]) {
 }
 
 export enum Icon {
-  Poison = 'poison',
+  PoisonStroke = require('../icons/poison-stroke.svg'),
+  PoisonFill = require('../icons/poison-fill.svg'),
 }
 
 export function getIconURL(name: Icon) {
-  return getAssetURL('icons', `${name}.svg`)
+  return joinPath(extensionBaseURL, `${name}`)
 }

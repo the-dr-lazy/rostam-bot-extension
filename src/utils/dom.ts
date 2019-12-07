@@ -1,6 +1,9 @@
+import '@iconfu/svg-inject'
 import * as R from 'ramda'
 
 import { getIconURL, Icon } from './chrome'
+
+declare function SVGInject(node: Node): void
 
 const classes = {
   suspicious: {
@@ -10,6 +13,10 @@ const classes = {
       icon: 'o-suspicious__icon',
     },
   },
+}
+
+export function svgInjectEventHandler(event: any) {
+  SVGInject(event.target)
 }
 
 export function getCommonAncestorFromNodes(nodes: Node[]) {
@@ -35,8 +42,9 @@ export function createSuspiciousOverlayElement() {
 export function createSuspiciousIconElement() {
   const img = document.createElement('img')
 
-  img.src = getIconURL(Icon.Poison)
+  img.src = getIconURL(Icon.PoisonFill)
   img.classList.add(classes.suspicious.elements.icon)
+  img.onload = svgInjectEventHandler
 
   return img
 }

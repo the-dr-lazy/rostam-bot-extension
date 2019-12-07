@@ -19,6 +19,7 @@
     "build:firefox": "webpack --env.production --config-name firefox"
   },
   "dependencies": {
+    "@iconfu/svg-inject": "^1.2.3",
     "deox": "^3.0.0",
     "ramda": "^0.26.1",
     "rxjs": "^6.5.2",
