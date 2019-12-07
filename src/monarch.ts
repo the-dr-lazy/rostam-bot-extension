@@ -41,24 +41,22 @@ type CreateComponentSpec<TState, TAction extends AnyAction> = {
   epic: Epic<TAction, TAction, TState>
 }
 
-export function createComponent<TState, TAction extends AnyAction>({
-  render,
-  reducer,
-  epic,
-}: CreateComponentSpec<TState, TAction>) {
-  const initialState = reducer(undefined, <any>init())
+export function createComponent<TState, TAction extends AnyAction>(
+  spec: CreateComponentSpec<TState, TAction>
+) {
+  const initialState = spec.reducer(undefined, <any>init())
 
   const action$ = new Subject<TAction>()
 
   const state$ = action$.pipe(
-    scan(reducer, initialState),
+    scan(spec.reducer, initialState),
     distinctUntilChanged(),
     publishBehavior(initialState),
     refCount()
   )
 
-  const epic$ = epic(action$.asObservable(), state$)
-  const vdoms$ = state$.pipe(map(render), startWith(undefined), pairwise())
+  const epic$ = spec.epic(action$.asObservable(), state$)
+  const vdoms$ = state$.pipe(map(spec.render), startWith(undefined), pairwise())
 
   epic$.subscribe(action$)
 
