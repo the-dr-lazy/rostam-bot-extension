@@ -23,6 +23,7 @@
     "deox": "^3.0.0",
     "ramda": "^0.26.1",
     "rxjs": "^6.5.2",
+    "snabbdom": "^0.7.3",
     "tslib": "^1.10.0",
     "webextension-polyfill": "^0.4.0"
   },
